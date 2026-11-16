@@ -1,0 +1,123 @@
+[project]
+name = "dbpilot"
+version = "0.1.0"
+description = "Euron Open DBPilot: a self-hosted, team-shared database operations dashboard. Sealed credentials, database-enforced read-only queries, AI-generated SQL that can never write, confirmed and audited writes, backups, schema comparison and health monitoring."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12,<3.14"
+# One package for the API, the scheduled-backup worker and the CLI.
+dependencies = [
+  "pydantic>=2.9",
+  "pydantic-settings>=2.6",
+  "orjson>=3.10",
+  "fastapi>=0.115,<1",
+  "uvicorn[standard]>=0.32",
+  "httpx>=0.28",
+  "pyjwt>=2.10",
+  "sqlalchemy[asyncio]>=2.1",
+  "asyncpg>=0.30",
+  "alembic>=1.14",
+  "redis>=5.2",
+  "argon2-cffi>=23.1",
+  "boto3>=1.35",
+  "cryptography>=43",
+  "prometheus-client>=0.21",
+  "opentelemetry-api>=1.28",
+  "opentelemetry-sdk>=1.28",
+  "opentelemetry-exporter-otlp-proto-http>=1.28",
+  "pyyaml>=6.0",
+  "python-multipart>=0.0.20",
+  # The SQL guard parses every statement into an AST in the connection's dialect.
+  "sqlglot>=30",
+  # Connected databases. Synchronous drivers: every call runs in a worker thread through
+  # the connection gateway (connections/gateway.py), never on the event loop.
+  "psycopg[binary]>=3.2",
+  "pymysql>=1.1",
+  "pymssql>=2.3",
+  "pymongo>=4.10",
+  # SQL Server returns estimated plans as XML from a server DBPilot does not control.
+  "defusedxml>=0.7",
+]
+
+[project.scripts]
+dbpilot = "dbpilot.cli:main"
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3",
+  "pytest-asyncio>=0.24",
+  "pytest-cov>=6.0",
+  "ruff>=0.8",
+  "mypy>=1.13",
+  "boto3-stubs[s3,kms]>=1.35",
+  "types-pyyaml>=6.0",
+  "types-pymysql>=1.1",
+  "types-defusedxml>=0.7",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dbpilot"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "S", "A", "C4", "SIM", "RUF", "ASYNC", "PT"]
+ignore = ["S101", "B008", "RUF012", "RUF001"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["N803", "S105", "S106", "S311", "S603", "S608", "E501", "PT018", "PT022", "PT011", "S110", "ASYNC109", "ASYNC230", "ASYNC251"]
+# Pytest style rules do not apply outside tests (asserts there narrow types).
+"src/**" = ["PT"]
+"src/dbpilot/migrations/**" = ["E501", "UP", "I"]
+"src/dbpilot/demo/**" = ["E501", "S311", "S608", "S105"]
+# These modules build SQL text from identifiers the database itself reported (quoted by the
+# dialect's own preparer) or from the guard's parse tree; user text never reaches them raw.
+"src/dbpilot/connections/connectors/**" = ["S608"]
+"src/dbpilot/comparisons/migration.py" = ["S608"]
+"src/dbpilot/schema/preview.py" = ["S608"]
+"src/dbpilot/mockai/**" = ["S608", "S311"]
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
+mypy_path = "src"
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["sqlglot.*", "pymssql.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+testpaths = ["tests"]
+markers = [
+  "integration: needs Postgres, Redis and the demo databases (make test-integration)",
+  "mssql: needs the SQL Server demo database (skipped when it is not running)",
+  "mongodb: needs the MongoDB demo database (skipped when it is not running)",
+  "redissource: needs the Redis demo source (skipped when it is not running)",
+]
+addopts = "-ra"
+# A test running longer than this gets every thread's stack dumped (it is not killed), so
+# a hang shows where it waits instead of only that it waits.
+faulthandler_timeout = 180
+
+[tool.coverage.run]
+source = ["dbpilot"]
+branch = true
+concurrency = ["greenlet", "thread"]
+# Migrations are exercised by every integration run (the suite builds its database with
+# them); the demo seed is exercised by make demo.
+omit = ["*/migrations/*", "*/demo/*"]
+
+[tool.coverage.report]
+skip_empty = true
+show_missing = true

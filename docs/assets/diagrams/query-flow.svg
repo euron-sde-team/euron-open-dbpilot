@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 420" width="1100" height="420" role="img" aria-label="A query end to end: typed or AI generated, checked by the SQL guard, opened read only by the gateway, limited by scan and row ceilings, and recorded as one query run and one audit entry; a human-marked write instead creates a confirmation that needs a token and a digest before it runs">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#52626a"/></marker>
+  </defs>
+  <rect width="1100" height="420" rx="18" fill="#f4f7f7"/>
+  <g font-family="Inter, -apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" fill="#0f1a1c">
+    <rect x="30" y="40" width="160" height="60" rx="10" fill="#ffffff" stroke="#dfe7e8"/>
+    <text x="110" y="66" text-anchor="middle" font-weight="600">Typed in editor</text>
+    <text x="110" y="84" text-anchor="middle" font-size="11" fill="#52626a">or AI generated</text>
+    <path d="M190 70L248 70" stroke="#52626a" fill="none" marker-end="url(#a)"/>
+
+    <rect x="250" y="40" width="170" height="60" rx="10" fill="#dceefd" stroke="#0e63a8"/>
+    <text x="335" y="66" text-anchor="middle" font-weight="700" fill="#0e63a8">SQL guard</text>
+    <text x="335" y="84" text-anchor="middle" font-size="11" fill="#52626a">exactly one read-only query?</text>
+    <path d="M420 70L478 70" stroke="#52626a" fill="none" marker-end="url(#a)"/>
+
+    <rect x="480" y="40" width="170" height="60" rx="10" fill="#dceefd" stroke="#0e63a8"/>
+    <text x="565" y="66" text-anchor="middle" font-weight="700" fill="#0e63a8">Gateway</text>
+    <text x="565" y="84" text-anchor="middle" font-size="11" fill="#52626a">opens the connection read-only</text>
+    <path d="M650 70L708 70" stroke="#52626a" fill="none" marker-end="url(#a)"/>
+
+    <rect x="710" y="40" width="170" height="60" rx="10" fill="#ffffff" stroke="#dfe7e8"/>
+    <text x="795" y="66" text-anchor="middle" font-weight="600">Scan/row limits</text>
+    <text x="795" y="84" text-anchor="middle" font-size="11" fill="#52626a">planner estimate, truncation</text>
+    <path d="M880 70L938 70" stroke="#52626a" fill="none" marker-end="url(#a)"/>
+
+    <rect x="940" y="40" width="140" height="60" rx="10" fill="#ffffff" stroke="#dfe7e8"/>
+    <text x="1010" y="66" text-anchor="middle" font-weight="600">query_runs</text>
+    <text x="1010" y="84" text-anchor="middle" font-size="11" fill="#52626a">+ one audit entry</text>
+
+    <path d="M335 100L335 150" stroke="#e04f5f" fill="none" marker-end="url(#a)" stroke-dasharray="5 4"/>
+    <text x="350" y="130" font-size="11.5" fill="#e04f5f">refused (AI: final, no override)</text>
+    <rect x="250" y="152" width="300" height="50" rx="10" fill="#fde8e9" stroke="#e04f5f"/>
+    <text x="400" y="182" text-anchor="middle" font-weight="700" fill="#b4232f">Refused. Nothing ran. Recorded.</text>
+
+    <path d="M110 100L110 260" stroke="#52626a" fill="none" marker-end="url(#a)" stroke-dasharray="5 4"/>
+    <text x="118" y="230" font-size="11.5" fill="#52626a">human marks it a write</text>
+
+    <rect x="30" y="262" width="200" height="60" rx="10" fill="#fff6e4" stroke="#c88a1a"/>
+    <text x="130" y="288" text-anchor="middle" font-weight="700" fill="#8a5c0c">Confirmation created</text>
+    <text x="130" y="306" text-anchor="middle" font-size="11" fill="#8a5c0c">token + digest, nothing run</text>
+    <path d="M232 292L290 292" stroke="#52626a" fill="none" marker-end="url(#a)"/>
+
+    <rect x="292" y="262" width="210" height="60" rx="10" fill="#fff6e4" stroke="#c88a1a"/>
+    <text x="397" y="288" text-anchor="middle" font-weight="700" fill="#8a5c0c">Confirm: token + digest</text>
+    <text x="397" y="306" text-anchor="middle" font-size="11" fill="#8a5c0c">both must match exactly</text>
+    <path d="M502 292L560 292" stroke="#52626a" fill="none" marker-end="url(#a)"/>
+
+    <rect x="562" y="262" width="230" height="60" rx="10" fill="#dceefd" stroke="#0e63a8"/>
+    <text x="677" y="288" text-anchor="middle" font-weight="700" fill="#0e63a8">Executes via the gateway</text>
+    <text x="677" y="306" text-anchor="middle" font-size="11" fill="#52626a">same path every query uses</text>
+    <path d="M792 292L850 292" stroke="#52626a" fill="none" marker-end="url(#a)"/>
+
+    <rect x="852" y="262" width="220" height="60" rx="10" fill="#ffffff" stroke="#dfe7e8"/>
+    <text x="962" y="288" text-anchor="middle" font-weight="600">3 audit entries</text>
+    <text x="962" y="306" text-anchor="middle" font-size="11" fill="#52626a">requested, confirmed, executed</text>
+
+    <text x="30" y="370" font-size="12" fill="#52626a">AC4: an AI-generated statement never reaches a confirmation; a refusal there is final.</text>
+    <text x="30" y="390" font-size="12" fill="#52626a">AC5/AC7/AC8: the identical confirmation path backs writes, restores and migrations.</text>
+  </g>
+</svg>

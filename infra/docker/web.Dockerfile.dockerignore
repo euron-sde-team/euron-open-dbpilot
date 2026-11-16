@@ -1,0 +1,9 @@
+# Build context: apps/web (BuildKit reads <Dockerfile>.dockerignore next to the Dockerfile).
+node_modules
+.next
+out
+coverage
+*.tsbuildinfo
+.env
+.env.*
+test

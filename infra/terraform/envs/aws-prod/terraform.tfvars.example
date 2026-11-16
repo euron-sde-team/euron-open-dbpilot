@@ -1,0 +1,34 @@
+# Copy to terraform.tfvars (git-ignored) and replace every placeholder.
+region      = "us-east-1"
+name_prefix = "acme-dbpilot-prod" # the objects bucket name derives from this: make it globally unique
+
+hostname        = "dbpilot.example.com"
+certificate_arn = "<ACM_CERTIFICATE_ARN>"    # same region, covering hostname
+route53_zone_id = "<ROUTE53_HOSTED_ZONE_ID>" # or remove and CNAME hostname to load_balancer_dns_name
+
+# The image tag pushed to the ecr_repositories output (git commit or release).
+image_tag = "0.1.0"
+
+# The AI assistant (docs/PLAN.md: natural-language-to-SQL, explain, index suggestions,
+# error diagnosis; 0.1.0 never lets an AI-generated statement write, see AC4). "none"
+# disables model calls; explanations then come from the syntax tree and rules alone.
+# ai_provider = "openai"
+# ai_base_url = "https://api.openai.com/v1"
+# ai_model    = "gpt-4o-mini"
+# The provider's API key (AI_API_KEY) is a secret: add it to the secrets module's
+# app_keys for a real deployment, never to a plain tfvars file.
+
+# alarm_email              = "oncall@example.com"
+# metrics_allowed_cidrs    = ["203.0.113.10/32"] # your Prometheus egress address
+# backup_failure_threshold = 5
+# query_refusal_threshold  = 20
+# ai_refusal_threshold     = 50
+
+# The databases a team registers (default: anywhere). Restrict to your networks:
+# source_cidrs = ["10.20.0.0/16", "198.51.100.7/32"]
+
+# A self-hosted AI provider inside the VPC (Ollama, vLLM) on a port other than 443:
+# ai_egress = [{ cidr = "10.0.0.0/16", port = 11434 }]
+
+# Extra non-secret settings (see docs/guides/configuration.md).
+# api_extra_environment = { SCHEMA_CACHE_TTL_S = "3600", RESULT_TTL_S = "3600" }
